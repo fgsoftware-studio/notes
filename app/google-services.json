@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "259243212329",
+    "project_id": "notes-2de5f",
+    "storage_bucket": "notes-2de5f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259243212329:android:49475803e5cf65a75c6638",
+        "android_client_info": {
+          "package_name": "com.fgsoftwarestudio.Notes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259243212329-rsatvmotv85ko36241a7t9ko5okhj6e6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCshPDZpaGYobMvaUu_EJiNplxYn38L54U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259243212329-rsatvmotv85ko36241a7t9ko5okhj6e6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
