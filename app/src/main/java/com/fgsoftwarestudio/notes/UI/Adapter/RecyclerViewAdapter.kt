@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fgsoftwarestudio.notes.Model.Note
 import com.fgsoftwarestudio.notes.R
 
-class RecyclerViewAdapter (
+class RecyclerViewAdapter(
     val context: Context,
     val noteClickDeleteInterface: NoteClickDeleteInterface,
     val noteClickInterface: NoteClickInterface
-    ) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
     private val allNotes = ArrayList<Note>()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -32,8 +32,8 @@ class RecyclerViewAdapter (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.noteTV.setText(allNotes.get(position).noteTitle)
-        holder.dateTV.setText("Last Updated : " + allNotes.get(position).timeStamp)
+        holder.noteTV.text = allNotes.get(position).noteTitle
+        holder.dateTV.text = "Last Updated : " + allNotes.get(position).timeStamp
 
         holder.deleteIV.setOnClickListener {
             noteClickDeleteInterface.onDeleteIconClick(allNotes.get(position))

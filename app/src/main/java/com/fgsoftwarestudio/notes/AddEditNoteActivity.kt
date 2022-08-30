@@ -12,13 +12,13 @@ import com.fgsoftwarestudio.notes.ViewModel.NoteViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddEditNoteActivity : AppCompatActivity(){
+class AddEditNoteActivity : AppCompatActivity() {
     lateinit var noteTitleEdt: EditText
     lateinit var noteEdt: EditText
     lateinit var saveBtn: Button
     lateinit var viewModel: NoteViewModel
 
-    var noteID = -1;
+    var noteID = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +41,11 @@ class AddEditNoteActivity : AppCompatActivity(){
 
             noteID = intent.getIntExtra("noteId", -1)
 
-            saveBtn.setText("Update Note")
+            saveBtn.text = "Update Note"
             noteTitleEdt.setText(noteTitle)
             noteEdt.setText(noteDescription)
         } else {
-            saveBtn.setText("Save Note")
+            saveBtn.text = "Save Note"
         }
 
         saveBtn.setOnClickListener {
