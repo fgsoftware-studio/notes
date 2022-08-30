@@ -8,14 +8,7 @@
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/9.9.3/firebase-app-compat.js"></script>
     <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/9.9.3/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/9.9.3/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/9.9.3/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/9.9.3/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/9.9.3/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/9.9.3/firebase-storage-compat.js"></script>
     <script defer src="/__/firebase/9.9.3/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/9.9.3/firebase-remote-config-compat.js"></script>
     <script defer src="/__/firebase/9.9.3/firebase-performance-compat.js"></script>
     <!-- 
       initialize the SDK after all desired features are loaded, set useEmulator to false
@@ -46,7 +39,29 @@
       <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
     </div>
     <p id="load">Firebase SDK Loading&hellip;</p>
-
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+    
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKO8xfuDcoWWWwN41_YGVxma5he7DmshA",
+        authDomain: "notes-2de5f.firebaseapp.com",
+        projectId: "notes-2de5f",
+        storageBucket: "notes-2de5f.appspot.com",
+        messagingSenderId: "259243212329",
+        appId: "1:259243212329:web:51ef9518ced28d8f5c6638",
+        measurementId: "G-NFVJ6PLFRJ"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const loadEl = document.querySelector('#load');
