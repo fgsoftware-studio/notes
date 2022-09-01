@@ -6,17 +6,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.fgsoftwarestudio.notes.Model.Note
 import com.fgsoftwarestudio.notes.UI.Adapter.NoteClickDeleteInterface
 import com.fgsoftwarestudio.notes.UI.Adapter.NoteClickInterface
 import com.fgsoftwarestudio.notes.UI.Adapter.RecyclerViewAdapter
 import com.fgsoftwarestudio.notes.ViewModel.NoteViewModel
-import com.fgsoftwarestudio.notes.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInterface {
-    lateinit var noteModel: NoteViewModel
-
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var noteModel: NoteViewModel
+    private lateinit var notesRV: RecyclerView
+    private lateinit var noteRVAdapter: RecyclerViewAdapter
+    private lateinit var btnAdd: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
 
     override fun onNoteClick(note: Note) {
         val intent = Intent(this@MainActivity, AddEditNoteActivity::class.java)
+
         intent.putExtra("noteType", "Edit")
         intent.putExtra("noteTitle", note.noteTitle)
         intent.putExtra("noteDescription", note.noteDescription)
@@ -41,10 +45,14 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
     }
 
     private fun init() {
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
 
-        val noteRVAdapter = RecyclerViewAdapter(this, this, this)
+        notesRV = findViewById(R.id.notesRV)
+        noteRVAdapter = RecyclerViewAdapter(this, this, this)
+        btnAdd = findViewById(R.id.idFAB)
+
+        notesRV.layoutManager = LinearLayoutManager(this)
+        notesRV.adapter = noteRVAdapter
 
         noteModel = ViewModelProvider(
             this,
@@ -57,7 +65,7 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
             }
         })
 
-        binding.idFAB.setOnClickListener {
+        btnAdd.setOnClickListener {
             val intent = Intent(this@MainActivity, AddEditNoteActivity::class.java)
             startActivity(intent)
             this.finish()
