@@ -15,21 +15,23 @@ import com.fgsoftwarestudio.notes.UI.Adapter.NoteClickInterface
 import com.fgsoftwarestudio.notes.UI.Adapter.RecyclerViewAdapter
 import com.fgsoftwarestudio.notes.ViewModel.NoteViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.vending.licensing.LicenseChecker
-import com.google.android.vending.licensing.LicenseCheckerCallback
+import com.google.android.vending.licensing.*
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInterface {
-    companion object{
-        private const val BASE64_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkkmPYDP6G5fDQipuNP2bTU9tK5W7FMi5mqfTA2oOdkSbttKn6E4LEUlqGSkQXS2xHCFe6em3n/91TYNI50UjQB0TnbZVua806GxqQF6mI34HBtd4Jwo2Q6RjZw0wlze3RoGu8XPLURAwCzuQP8iD7LzbO71zgh5WGIL0VOJivRr6TNLmj7GfkI0CkNl68dWUOg/EjJPWOZB77kqaRp7XaDVsG+AybU6bfEDvo+bSLt9ZGmYfmdk6i6zmVTCo6xLA/b52bezSq0Bk7A9pKgB2wiNDrJEiRFxMv0NguscxK2Iyeqg2kI5PrKU7kXrpJj8Z5OBeuyT+my+wZgl9FjjZQQIDAQAB";
+    companion object {
+        private const val BASE64_PUBLIC_KEY =
+            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkkmPYDP6G5fDQipuNP2bTU9tK5W7FMi5mqfTA2oOdkSbttKn6E4LEUlqGSkQXS2xHCFe6em3n/91TYNI50UjQB0TnbZVua806GxqQF6mI34HBtd4Jwo2Q6RjZw0wlze3RoGu8XPLURAwCzuQP8iD7LzbO71zgh5WGIL0VOJivRr6TNLmj7GfkI0CkNl68dWUOg/EjJPWOZB77kqaRp7XaDVsG+AybU6bfEDvo+bSLt9ZGmYfmdk6i6zmVTCo6xLA/b52bezSq0Bk7A9pKgB2wiNDrJEiRFxMv0NguscxK2Iyeqg2kI5PrKU7kXrpJj8Z5OBeuyT+my+wZgl9FjjZQQIDAQAB"
         private val SALT = byteArrayOf(
             1, 92, -46, 44, 83,
-            -64, 63, -66, 21, -11, 
+            -64, 63, -66, 21, -11,
             -78, -41, 22, -52, 2,
             -45, -14, -19, 80, -36
         )
     }
+
     private val deviceId: String by lazy {
-        Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
     }
     private lateinit var licenseCheckerCallback: LicenseCheckerCallback
     private lateinit var checker: LicenseChecker
@@ -40,8 +42,20 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        licenseCheckerCallback = MyLicenseCheckerCallback()
+
+        checker = LicenseChecker(
+            this,
+            ServerManagedPolicy(this, AESObfuscator(SALT, packageName, deviceId)),
+            BASE64_PUBLIC_KEY
+        )
 
         init()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        checker.onDestroy()
     }
 
     override fun onNoteClick(note: Note) {
@@ -63,6 +77,7 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
 
     private fun init() {
         setContentView(R.layout.activity_main)
+        doCheck()
 
         notesRV = findViewById(R.id.notesRV)
         noteRVAdapter = RecyclerViewAdapter(this, this, this)
@@ -89,7 +104,40 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         }
     }
 
-    //TODO: license checker
-    //TODO: in-app update
+    private fun doCheck() {
+        checker.checkAccess(licenseCheckerCallback)
+    }
+
+    private inner class MyLicenseCheckerCallback : LicenseCheckerCallback {
+        override fun allow(reason: Int) {
+            if (isFinishing) {
+                return
+            }
+        }
+
+        override fun applicationError(errorCode: Int) {
+            dontAllow(Policy.NOT_LICENSED)
+        }
+
+        override fun dontAllow(reason: Int) {
+            if (isFinishing) {
+                return
+            }
+
+            displayResult("Not Licensed")
+            abort()
+        }
+    }
+
+    private fun abort() {
+        finishAffinity()
+        exitProcess(0)
+    }
+
+    private fun displayResult(result: String) {
+        Toast.makeText(this, result, Toast.LENGTH_LONG).show()
+    }
+
+//TODO: in-app update
     //TODO: in-app review
 }
