@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
     }
     private lateinit var licenseCheckerCallback: LicenseCheckerCallback
+    private lateinit var inAppUpdate: InAppUpdate
     private lateinit var checker: LicenseChecker
     private lateinit var noteModel: NoteViewModel
     private lateinit var notesRV: RecyclerView
@@ -53,9 +54,21 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         init()
     }
 
+    override fun onResume() {
+        super.onResume()
+        inAppUpdate.onResume()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         checker.onDestroy()
+        inAppUpdate.onDestroy()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        inAppUpdate.onActivityResult(requestCode,resultCode, data)
     }
 
     override fun onNoteClick(note: Note) {
@@ -79,6 +92,7 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         setContentView(R.layout.activity_main)
         doCheck()
 
+        inAppUpdate = InAppUpdate(this)
         notesRV = findViewById(R.id.notesRV)
         noteRVAdapter = RecyclerViewAdapter(this, this, this)
         btnAdd = findViewById(R.id.idFAB)
@@ -138,6 +152,5 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         Toast.makeText(this, result, Toast.LENGTH_LONG).show()
     }
 
-//TODO: in-app update
     //TODO: in-app review
 }
