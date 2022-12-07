@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
     companion object {
         private const val BASE64_PUBLIC_KEY =
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkkmPYDP6G5fDQipuNP2bTU9tK5W7FMi5mqfTA2oOdkSbttKn6E4LEUlqGSkQXS2xHCFe6em3n/91TYNI50UjQB0TnbZVua806GxqQF6mI34HBtd4Jwo2Q6RjZw0wlze3RoGu8XPLURAwCzuQP8iD7LzbO71zgh5WGIL0VOJivRr6TNLmj7GfkI0CkNl68dWUOg/EjJPWOZB77kqaRp7XaDVsG+AybU6bfEDvo+bSLt9ZGmYfmdk6i6zmVTCo6xLA/b52bezSq0Bk7A9pKgB2wiNDrJEiRFxMv0NguscxK2Iyeqg2kI5PrKU7kXrpJj8Z5OBeuyT+my+wZgl9FjjZQQIDAQAB"
+        private const val MY_REQUEST_CODE = 500
         private val SALT = byteArrayOf(
             1, 92, -46, 44, 83,
             -64, 63, -66, 21, -11,
@@ -34,7 +35,6 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
     }
     private lateinit var licenseCheckerCallback: LicenseCheckerCallback
-    private lateinit var inAppUpdate: InAppUpdate
     private lateinit var checker: LicenseChecker
     private lateinit var noteModel: NoteViewModel
     private lateinit var notesRV: RecyclerView
@@ -54,21 +54,9 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         init()
     }
 
-    override fun onResume() {
-        super.onResume()
-        inAppUpdate.onResume()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         checker.onDestroy()
-        inAppUpdate.onDestroy()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        inAppUpdate.onActivityResult(requestCode,resultCode, data)
     }
 
     override fun onNoteClick(note: Note) {
@@ -92,7 +80,6 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         setContentView(R.layout.activity_main)
         doCheck()
 
-        inAppUpdate = InAppUpdate(this)
         notesRV = findViewById(R.id.notesRV)
         noteRVAdapter = RecyclerViewAdapter(this, this, this)
         btnAdd = findViewById(R.id.idFAB)
@@ -103,7 +90,7 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         noteModel = ViewModelProvider(
             this,
             ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        ).get(NoteViewModel::class.java)
+        )[NoteViewModel::class.java]
 
         noteModel.allNotes.observe(this, Observer { list ->
             list?.let {
