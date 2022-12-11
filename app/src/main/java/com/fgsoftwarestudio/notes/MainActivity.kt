@@ -1,5 +1,6 @@
 package com.fgsoftwarestudio.notes
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -18,11 +19,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.vending.licensing.*
 import kotlin.system.exitProcess
 
+@SuppressLint("HardwareIds")
 class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInterface {
     companion object {
-        private const val BASE64_PUBLIC_KEY =
-            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkkmPYDP6G5fDQipuNP2bTU9tK5W7FMi5mqfTA2oOdkSbttKn6E4LEUlqGSkQXS2xHCFe6em3n/91TYNI50UjQB0TnbZVua806GxqQF6mI34HBtd4Jwo2Q6RjZw0wlze3RoGu8XPLURAwCzuQP8iD7LzbO71zgh5WGIL0VOJivRr6TNLmj7GfkI0CkNl68dWUOg/EjJPWOZB77kqaRp7XaDVsG+AybU6bfEDvo+bSLt9ZGmYfmdk6i6zmVTCo6xLA/b52bezSq0Bk7A9pKgB2wiNDrJEiRFxMv0NguscxK2Iyeqg2kI5PrKU7kXrpJj8Z5OBeuyT+my+wZgl9FjjZQQIDAQAB"
-        private const val MY_REQUEST_CODE = 500
+        private const val BASE64_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApcDm1SanvTZFM7CoJgIdxwzV6gt+U8fkpY0MosA7opgf0eqZ4ZiJHBDcN206MJ2CRnFMX0/5LOCZhWWap7oU8+LvE78UwHkiDnf2MYN2jvPmrxAThlsFLoDwyTYA8brv8Mh2Z+1xki40qx98erl4lQyMFSP5C3jS93WpNs1yE+Qzb6pvZpRKXbY5JvaMwkVwP1zkb+Eisj/zYN2frhw8U7TnAWvvvr2sWHlOEVl5Unru1mZle37rGlIS2ov3koKbVYxpbnj3HnzmibT44hSnLiapQreGvq99lPm3U/Erfsy3jD0savQsl/bAsSrXlgRrZVoSbsimy+ZqxRYLzy3olwIDAQAB"
         private val SALT = byteArrayOf(
             1, 92, -46, 44, 83,
             -64, 63, -66, 21, -11,
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
         noteModel = ViewModelProvider(
             this,
             ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        )[NoteViewModel::class.java]
+        ).get(NoteViewModel::class.java)
 
         noteModel.allNotes.observe(this, Observer { list ->
             list?.let {
